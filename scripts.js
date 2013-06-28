@@ -100,22 +100,31 @@ Textual.viewFinishedReload = function() {
 	Textual.viewFinishedLoading();
 };
 
-Textual.newMessagePostedToView = function(lineNumber) {
-	var sender = document.querySelector("#line" + lineNumber + " .sender");
+Textual.newMessagePostedToView = function(lineId) {
+	var currentLine = document.getElementById("line-" + lineId);
 
-	if (!sender) {
+	if (!currentLine) {
 		return;
 	}
 
-	var nick = sender.getAttribute("nick");
+	var nicks = currentLine.querySelectorAll(".sender, .message .inline_nickname");
 
-	if (!nick) {
+	if (!nicks) {
 		return;
 	}
 
-	colorNicks.addNick(nick);
+	[].forEach.call(nicks, function(element) {
+		var nick;
 
-	[].forEach.call(document.querySelectorAll("#line" + lineNumber + " .message .inline_nickname"), function(nick) {
-		nick.setAttribute("nick", nick.innerText);
+		if (element.className == "inline_nickname") {
+			nick = element.innerText;
+			element.setAttribute("nick", element.innerText);
+		} else {
+			nick = element.getAttribute("nick");
+		}
+
+		if (nick) {
+			colorNicks.addNick(nick);
+		}
 	});
 };
