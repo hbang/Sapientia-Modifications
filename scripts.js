@@ -29,7 +29,7 @@ var colorNicks = {
 	getHash: function(nick) {
 		var cleaned = colorNicks.cleanNick(nick), hash = 0;
 
-		for(var i = 0; i < cleaned.length; i++) {
+		for (var i = 0; i < cleaned.length; i++) {
 			hash = cleaned.charCodeAt(i) + (hash << 6) + (hash << 16) - hash;
 		}
 
@@ -67,18 +67,18 @@ var colorNicks = {
 		colorNicks.cache[nick] = color;
 		localStorage.colorNicks = JSON.stringify(colorNicks.cache);
 
-		colorNicks._addCSS(nick, color);
+		colorNicks._addCss(nick, color);
 	},
 
 	viewFinishedLoading: function() {
 		for (var nick in colorNicks.cache) {
-			colorNicks._addCSS(nick, colorNicks.cache[nick]);
+			colorNicks._addCss(nick, colorNicks.cache[nick]);
 		}
 
 		document.body.appendChild(colorNicks.css);
 	},
 
-	_addCSS: function(nick, color) {
+	_addCss: function(nick, color) {
 		colorNicks.css.textContent += ".sender[nick='" + nick + "'], .inline_nickname[nick='" + nick + "'] { color: " + color + " !important; }";
 	}
 };
@@ -101,7 +101,11 @@ Textual.viewFinishedReload = function() {
 };
 
 Textual.newMessagePostedToView = function(lineId) {
-	var currentLine = document.getElementById("line-" + lineId);
+	var currentLine = document.getElementById("line" + lineId);
+
+	if (!currentLine) {
+		currentLine = document.getElementById("line-" + lineId);
+	}
 
 	if (!currentLine) {
 		return;
